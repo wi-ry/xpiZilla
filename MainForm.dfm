@@ -1,6 +1,6 @@
 object main: Tmain
-  Left = 281
-  Top = 179
+  Left = 207
+  Top = 105
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Extenzilla'
@@ -2806,7 +2806,7 @@ object main: Tmain
     Top = 0
     Width = 600
     Height = 360
-    ActivePage = files
+    ActivePage = required
     Align = alClient
     MultiLine = True
     TabOrder = 0

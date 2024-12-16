@@ -39,7 +39,7 @@ uses
   Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, ComObj, ActiveX,
   ShellAPI, FileCtrl, Grids, ToolWin, ActnMan, ActnCtrls, ActnMenus,
   xmldom, XMLIntf, msxmldom, XMLDoc, oxmldom, ztvregister, ztvBase,
-  ztvUnZip;
+  ztvUnZip, SimpleXML;
 
 type
   Tmain = class(TForm)
@@ -139,12 +139,13 @@ type
     procedure r_skinEnter(Sender: TObject);
     procedure TabSheet1Show(Sender: TObject);
   private
-    { Private declarations }
+  
   public
     procedure DeleteRecurse(src : String);
     procedure MakeRDFv2;
     procedure Reset;
     procedure ExportRDF;
+    procedure ReadRDF;
   end;
 
 var
@@ -430,7 +431,7 @@ begin
             d := e.AddChild('em:locale'); d.Text := r_locale.Text;
           end;
           if r_skin_checkbox.Checked = true then begin
-            d := e.AddChild('em:locale'); d.Text := r_skin.Text;
+            d := e.AddChild('em:skin'); d.Text := r_skin.Text;
           end;
 
       if a_cb.Checked = true then begin
@@ -473,6 +474,22 @@ begin
       rdf.active := False;
     end;
   end;
+end;
+
+procedure Tmain.ReadRDF;
+var
+  Node: TxmlNode;
+  Parser: TxmlParser;
+  FileName : String;
+  blah: string;
+begin
+  FileName := ExpandFileName(install + 'install.rdf');
+  Parser := TxmlParser.Create;
+  Node := Parser.LoadFile(FileName);
+
+  //r_extension.Text := Node['Description/em:name'].Value;
+  //r_package.Text := Node['Description/em:file/Description/em:package'].Value;
+
 end;
 
 procedure Tmain.help_aboutClick(Sender: TObject);
@@ -521,6 +538,7 @@ begin
      CreateDir(install);
      unzip_xpi.Extract();
    end;
+     ReadRDF;
      e_listbox.Update;
   end;
 end;
