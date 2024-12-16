@@ -1,5 +1,5 @@
 {
-  Extenzilla by Will Ryan - willryan@shaw.ca
+  xpiZilla by Will Ryan - willryan@shaw.ca
   Website: http://willbert.unserious.com
 
   Program concept:
@@ -7,17 +7,17 @@
     packages. Whether to make it easier to add the files needed for your
     extension and zip (or xpi?) them up into an extension package, or to simply
     update your existing extensions min and max version number compatability.
-    My goal is to have Extenzilla simplify extension, period.
+    My goal is to have xpiZilla simplify extension, period.
 
   Requirements:
-    The Extenzilla source requires the following software/components to be
+    The xpiZilla source requires the following software/components to be
     compiled.
       Borland Delphi 7.0 (May be compatable with earlier versions)
       ZipTV VCL (http://www.ziptv.com).
 
   What needs to be done:
     * Open option to open existing .xpi packages and load the data into
-      their associated fields in Extenzilla.
+      their associated fields in xpiZilla.
     * Miscellaneous code optimizations.
 
   Want to help?
@@ -39,17 +39,15 @@ uses
   Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, ComObj, ActiveX,
   ShellAPI, FileCtrl, Grids, ToolWin, ActnMan, ActnCtrls, ActnMenus,
   xmldom, XMLIntf, msxmldom, XMLDoc, oxmldom, ztvregister, ztvBase,
-  ztvUnZip, SimpleXML;
+  ztvUnZip;
 
 type
   Tmain = class(TForm)
-    opendialog: TOpenDialog;
     menu: TMainMenu;
     file_menu: TMenuItem;
     file_exit: TMenuItem;
     file_space_1: TMenuItem;
     file_save: TMenuItem;
-    file_open: TMenuItem;
     file_new: TMenuItem;
     file_export: TMenuItem;
     file_space_2: TMenuItem;
@@ -112,11 +110,11 @@ type
     Memo1: TMemo;
     Label2: TLabel;
     unzip_xpi: TUnZip;
+    OpenDialog: TOpenDialog;
     procedure help_aboutClick(Sender: TObject);
     procedure r_guid_buttonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure file_newClick(Sender: TObject);
-    procedure file_openClick(Sender: TObject);
     procedure file_exportClick(Sender: TObject);
     Procedure FileCopy( Const sourcefilename, targetfilename: String );
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -139,13 +137,12 @@ type
     procedure r_skinEnter(Sender: TObject);
     procedure TabSheet1Show(Sender: TObject);
   private
-  
+    { Private declarations }
   public
     procedure DeleteRecurse(src : String);
     procedure MakeRDFv2;
     procedure Reset;
     procedure ExportRDF;
-    procedure ReadRDF;
   end;
 
 var
@@ -476,22 +473,6 @@ begin
   end;
 end;
 
-procedure Tmain.ReadRDF;
-var
-  Node: TxmlNode;
-  Parser: TxmlParser;
-  FileName : String;
-  blah: string;
-begin
-  FileName := ExpandFileName(install + 'install.rdf');
-  Parser := TxmlParser.Create;
-  Node := Parser.LoadFile(FileName);
-
-  //r_extension.Text := Node['Description/em:name'].Value;
-  //r_package.Text := Node['Description/em:file/Description/em:package'].Value;
-
-end;
-
 procedure Tmain.help_aboutClick(Sender: TObject);
 begin
   // Shows the about box.
@@ -520,27 +501,6 @@ begin
        Reset
      else
        Exit;
-end;
-
-procedure Tmain.file_openClick(Sender: TObject);
-begin
-  // Yet to be coded...
-  with opendialog do
-    opendialog.Filter := 'Extension File (*.xpi)|*.xpi';
-  if opendialog.Execute = True then
-  begin
-   unzip_xpi.ArchiveFile := opendialog.FileName;
-   unzip_xpi.ExtractDir := install;
-   if DirectoryExists(install) then
-     unzip_xpi.Extract()
-   else
-   begin
-     CreateDir(install);
-     unzip_xpi.Extract();
-   end;
-     ReadRDF;
-     e_listbox.Update;
-  end;
 end;
 
 procedure Tmain.file_exportClick(Sender: TObject);

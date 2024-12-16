@@ -12,10 +12,11 @@ type
     listbox: TListBox;
     ok: TButton;
     savedialog: TSaveDialog;
-    timer: TTimer;
+    zip: TZip;
     procedure okClick(Sender: TObject);
-    procedure FormActivate(Sender: TObject);
     procedure zipEnd(Sender: TObject; FileName: String; CRC_PASS: Boolean);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -36,7 +37,22 @@ begin
   Close;
 end;
 
-procedure Tpackage.FormActivate(Sender: TObject);
+procedure Tpackage.zipEnd(Sender: TObject; FileName: String;
+  CRC_PASS: Boolean);
+begin
+  listbox.Items.Add('Done adding files to package!');
+
+  listbox.Cursor := crDefault;
+
+  ok.Enabled := True;
+end;
+
+procedure Tpackage.FormCreate(Sender: TObject);
+begin
+  install := (ExtractFilePath(Application.ExeName) + 'Temp\');
+end;
+
+procedure Tpackage.FormShow(Sender: TObject);
 begin
   // Clear the Listbox, in case a package has already been made in this session.
   listbox.Clear;
@@ -64,8 +80,8 @@ begin
     main.rdf.active := False;
 
     listbox.Items.Add('Done creating install.rdf!');
-    listbox.Items.Add('Adding extension files to package');
 
+    listbox.Items.Add('Adding extension files to package');
     // Configure the root directory, archive name, clear specs and add package files.
     zip.RootDir := install;
     zip.ArchiveFile := savedialog.FileName;
@@ -78,16 +94,6 @@ begin
     listbox.Items.Add('Packaging cancelled by user');
     ok.Enabled := True;
   end;
-end;
-
-procedure Tpackage.zipEnd(Sender: TObject; FileName: String;
-  CRC_PASS: Boolean);
-begin
-  listbox.Items.Add('Done adding files to package!');
-
-  listbox.Cursor := crDefault;
-
-  ok.Enabled := True;
 end;
 
 end.

@@ -1,6 +1,6 @@
 object package: Tpackage
-  Left = 443
-  Top = 263
+  Left = 222
+  Top = 141
   BorderStyle = bsToolWindow
   Caption = 'Packaging Extension'
   ClientHeight = 137
@@ -13,7 +13,8 @@ object package: Tpackage
   Font.Style = []
   OldCreateOrder = False
   Position = poDesktopCenter
-  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object listbox: TListBox
@@ -40,10 +41,42 @@ object package: Tpackage
     Left = 8
     Top = 104
   end
-  object timer: TTimer
-    Enabled = False
-    Interval = 5000
-    Left = 72
+  object zip: TZip
+    Attributes = [fsZeroAttr, fsReadOnly, fsArchive, fsCompressed, fsEncrypted]
+    DeleteOptions = doAllowUndo
+    ArcType = atZip
+    AttributesEx = []
+    CompressMethod = cmDeflate
+    DefaultExt = '.zip'
+    StoreFilesOfType.Strings = (
+      '.ACE'
+      '.ARC'
+      '.ARJ'
+      '.BH'
+      '.CAB'
+      '.ENC'
+      '.GZ'
+      '.HA'
+      '.JAR'
+      '.LHA'
+      '.LZH'
+      '.PAK'
+      '.PK3'
+      '.PK_'
+      '.RAR'
+      '.TAR'
+      '.TGZ'
+      '.UUE'
+      '.UU'
+      '.WAR'
+      '.XXE'
+      '.Z'
+      '.ZIP'
+      '.ZOO')
+    TempDir = 'C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\'
+    OnEnd = zipEnd
+    Switch = swAdd
+    Left = 40
     Top = 104
   end
 end
